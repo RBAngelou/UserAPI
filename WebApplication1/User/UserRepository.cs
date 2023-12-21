@@ -57,8 +57,9 @@ namespace WebApplication1.User
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
             _githubApiUrl += userName;
-            HttpResponseMessage result = client.GetAsync(_githubApiUrl).Result;
+            client.Timeout = TimeSpan.FromSeconds(3); //time out after 3 seconds
 
+            HttpResponseMessage result = client.GetAsync(_githubApiUrl).Result;
             userResponseModel = new RetrieveUserResponseModel() { Users = new List<User>() };
             userResponseModel.Status = (int)result.StatusCode;
             userResponseModel.Message = result.ReasonPhrase;

@@ -29,9 +29,6 @@ namespace WebApplication1.User
         /// Computes the average number of followers per public repository.
         /// </summary>
         /// <returns>average number of followers</returns>
-        public double GetAvgNumFollowersPerPubRepo()
-        {
-            return numOfFollowers / numOfPubRepo;
-        } 
+        public double avgNumFollowersPerPubRepo { get { return numOfFollowers / numOfPubRepo; } }
     }
 }
