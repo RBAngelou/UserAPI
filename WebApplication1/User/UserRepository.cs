@@ -12,10 +12,12 @@ namespace WebApplication1.User
         private Dictionary<string, User> _users = new Dictionary<string, User>();
         private string _token;
 
-        public User RetrieveUser(string userName, string token)
+        public RetrieveUserResponseModel RetrieveUser(string userName, string token)
         {
             _token = token;
-            return TryGetUserFromCache(userName, out User user) ? user : null;
+            bool isSuccess = TryGetUserFromCache(userName, out RetrieveUserResponseModel user);
+
+            return user;
         }
 
         /// <summary>
@@ -24,14 +26,18 @@ namespace WebApplication1.User
         /// <param name="userName"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        private bool TryGetUserFromCache(string userName, out User user)
+        private bool TryGetUserFromCache(string userName, out RetrieveUserResponseModel userResponseModel)
         {
-            if (_users.TryGetValue(userName, out user))
+            if (_users.TryGetValue(userName, out User retrieveUser))
             {
+                userResponseModel = new RetrieveUserResponseModel() { 
+                    Users = new List<User>() { retrieveUser },
+                    Status = 200,
+                    Message = "Successfully retrieved user from cache"
+                };
                 return true;
-            } else if (GetUserFromGithub(userName, out user))
+            } else if (GetUserFromGithub(userName, out userResponseModel))
             {
-                _users.Add(userName, user);
                 return true;
             }
 
@@ -44,7 +50,7 @@ namespace WebApplication1.User
         /// <param name="userName"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        private bool GetUserFromGithub(string userName, out User user)
+        private bool GetUserFromGithub(string userName, out RetrieveUserResponseModel userResponseModel)
         {
             //Send a GET request to the github api with the username and access token
             HttpClient client = new HttpClient();
@@ -53,18 +59,18 @@ namespace WebApplication1.User
             _githubApiUrl += userName;
             HttpResponseMessage result = client.GetAsync(_githubApiUrl).Result;
 
+            userResponseModel = new RetrieveUserResponseModel() { Users = new List<User>() };
+            userResponseModel.Status = (int)result.StatusCode;
+            userResponseModel.Message = result.ReasonPhrase;
             if (result.IsSuccessStatusCode)
             {
                 //Parse the response
                 string json = result.Content.ReadAsStringAsync().Result;
-                user = JsonConvert.DeserializeObject<User>(json);
+                User newUser = JsonConvert.DeserializeObject<User>(json);
+                _users.Add(userName, newUser);
+                userResponseModel.Users.Add(newUser);
                 return true;
             }
-            else
-            {
-                user = null;
-            }
-
             return false;
         }
     }

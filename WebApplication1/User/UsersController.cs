@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApplication1.User
 {
     [ApiController]
-    [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : Controller
     {
         private readonly IUserService _userService;
 
@@ -19,10 +18,11 @@ namespace WebApplication1.User
         /// </summary>
         /// <param name="userNames"></param>
         /// <returns></returns>
-        [HttpGet(Name = "RetrieveUsers")]
-        public ActionResult<RetrieveUserResponseModel> RetrieveUsers([FromHeader] RetrieveUserRequestModel userNames)
+        [HttpGet]
+        [Route("/api/retrieveUsers")]
+        public ActionResult<RetrieveUserResponseModel> retrieveUsers([FromQuery] RetrieveUserRequestModel userRequest)
         {
-            return _userService.RetrieveUsers(userNames);
+            return _userService.RetrieveUsers(userRequest);
         }
     }
 }

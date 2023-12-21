@@ -11,12 +11,7 @@ namespace WebApplication1.User
 
         public RetrieveUserResponseModel RetrieveUsers(RetrieveUserRequestModel userNames)
         {
-            User retrievedUser = _userRepository.RetrieveUser(userNames.usernames.FirstOrDefault(), userNames.bearerToken);
-
-            List<User> users = [retrievedUser];
-
-            RetrieveUserResponseModel getUserResponseModel = new RetrieveUserResponseModel() { Users = users };
-
+            RetrieveUserResponseModel getUserResponseModel = _userRepository.RetrieveUser(userNames.usernames.FirstOrDefault(), userNames.bearerToken);
             return getUserResponseModel;
         }
     }
