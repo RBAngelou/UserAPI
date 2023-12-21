@@ -16,6 +16,11 @@ namespace WebApplication1.User
         public required string login { get; set; }
 
         /// <summary>
+        /// The company associated with the user.
+        /// </summary>
+        public  string company { get; set; }
+
+        /// <summary>
         /// The number of followers of the user.
         /// </summary>
         public int numOfFollowers { get; set; }
