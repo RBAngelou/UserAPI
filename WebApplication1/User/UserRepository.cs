@@ -26,7 +26,9 @@ namespace WebApplication1.User
                 retrieveUserResponseModel.Users = retrievedUsers;
                 retrieveUserResponseModel.Status = (StatusCodes.Status200OK);
             }
-            else
+            
+            
+            if (retrieveUserResponseModel.Users.Count == 0)
             {
                 retrieveUserResponseModel.Status = (StatusCodes.Status500InternalServerError);
                 retrieveUserResponseModel.Message = "Please contact admin support";
