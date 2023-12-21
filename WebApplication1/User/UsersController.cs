@@ -19,13 +19,10 @@ namespace WebApplication1.User
         /// </summary>
         /// <param name="userNames"></param>
         /// <returns></returns>
-        [HttpPost(Name = "RetrieveUsers")]
-        [Authorize]
-        public ActionResult<RetrieveUserResponseModel> RetrieveUsers([FromBody] RetrieveUserRequestModel userNames)
+        [HttpGet(Name = "RetrieveUsers")]
+        public ActionResult<RetrieveUserResponseModel> RetrieveUsers([FromHeader] RetrieveUserRequestModel userNames)
         {
-            string bearerToken = Request.Headers["Authorization"];
-
-            return _userService.RetrieveUsers(userNames, bearerToken);
+            return _userService.RetrieveUsers(userNames);
         }
     }
 }

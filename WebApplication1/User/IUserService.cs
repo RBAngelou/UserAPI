@@ -2,6 +2,6 @@
 {
     public interface IUserService
     {
-        public RetrieveUserResponseModel RetrieveUsers(RetrieveUserRequestModel userNames, string token);
+        public RetrieveUserResponseModel RetrieveUsers(RetrieveUserRequestModel userNames);
     }
 }

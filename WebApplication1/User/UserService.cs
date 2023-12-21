@@ -9,9 +9,9 @@ namespace WebApplication1.User
             _userRepository = userRepository;
         }
 
-        public RetrieveUserResponseModel RetrieveUsers(RetrieveUserRequestModel userNames, string token)
+        public RetrieveUserResponseModel RetrieveUsers(RetrieveUserRequestModel userNames)
         {
-            User retrievedUser = _userRepository.RetrieveUser(userNames.Usernames.FirstOrDefault(), token);
+            User retrievedUser = _userRepository.RetrieveUser(userNames.usernames.FirstOrDefault(), userNames.bearerToken);
 
             List<User> users = [retrievedUser];
 

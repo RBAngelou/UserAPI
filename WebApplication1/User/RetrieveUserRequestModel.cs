@@ -10,7 +10,8 @@ namespace WebApplication1.User
         /// <summary>
         /// The List of Usernames to use as filter for retrieving users.
         /// </summary>
-        [Required]
-        public List<string> Usernames { get; set; }
+        public List<string> usernames { get; set; }
+
+        public string bearerToken { get; set; }
     }
 }
