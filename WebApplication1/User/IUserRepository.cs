@@ -2,6 +2,6 @@
 {
     public interface IUserRepository
     {
-        public User RetrieveUser(string userName);
+        public User RetrieveUser(string userName, string token);
     }
 }

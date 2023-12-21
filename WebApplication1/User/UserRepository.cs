@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace WebApplication1.User
 {
@@ -9,9 +10,11 @@ namespace WebApplication1.User
         /// </summary>
         private string _githubApiUrl = "https://api.github.com/users/";
         private Dictionary<string, User> _users = new Dictionary<string, User>();
+        private string _token;
 
-        public User RetrieveUser(string userName)
+        public User RetrieveUser(string userName, string token)
         {
+            _token = token;
             return TryGetUserFromCache(userName, out User user) ? user : null;
         }
 
@@ -45,6 +48,8 @@ namespace WebApplication1.User
         {
             //Send a GET request to the github api with the username and access token
             HttpClient client = new HttpClient();
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
             _githubApiUrl += userName;
             HttpResponseMessage result = client.GetAsync(_githubApiUrl).Result;
 

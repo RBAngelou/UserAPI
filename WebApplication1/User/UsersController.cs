@@ -23,7 +23,9 @@ namespace WebApplication1.User
         [Authorize]
         public ActionResult<RetrieveUserResponseModel> RetrieveUsers([FromBody] RetrieveUserRequestModel userNames)
         {
-            return _userService.RetrieveUsers(userNames);
+            string bearerToken = Request.Headers["Authorization"];
+
+            return _userService.RetrieveUsers(userNames, bearerToken);
         }
     }
 }
