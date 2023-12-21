@@ -50,17 +50,15 @@ namespace WebApplication1.User
                 {
                     retrievedUserFromCache.originInfo = "User retrieved from cache";
                     _retrievedUsers.Add(retrievedUserFromCache);
-                    return true;
                 }else if (_userDataManager.TryGetUser(name, token, out User retrievedUserFromManager))
                 {
                     //Add the user to the cache
                     _users.Add(name, retrievedUserFromManager);
                     //Add the user to the list of retrieved users
                     _retrievedUsers.Add(retrievedUserFromManager);
-                    return true;
                 }
             }
-            return false;
+            return true;
         }
 
 
