@@ -6,6 +6,7 @@ using WebApplication1.User;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddSingleton<IUserDataManager, GitHubUserDataManager>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
 

@@ -30,5 +30,10 @@ namespace WebApplication1.User
         /// </summary>
         /// <returns>average number of followers</returns>
         public double avgNumFollowersPerPubRepo { get { return numOfFollowers / numOfPubRepo; } }
+
+        /// <summary>
+        /// Origin info of the user.
+        /// </summary>
+        public string originInfo { get; set; }
     }
 }

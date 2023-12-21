@@ -13,7 +13,7 @@ namespace WebApplication1.User
         public int Status { get; set; }
 
         /// <summary>
-        /// Returns OK if request is successful, otherwise a message will specify why it's rejected.
+        /// Returns OK if request is successful, otherwise a message will specify why it's rejected or unsuccessful.
         /// </summary>
         public string Message { get; set; }
 

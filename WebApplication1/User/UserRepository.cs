@@ -5,74 +5,64 @@ namespace WebApplication1.User
 {
     public class UserRepository : IUserRepository
     {
-        /// <summary>
-        /// the url for the github api
-        /// </summary>
-        private string _githubApiUrl = "https://api.github.com/users/";
+
         private Dictionary<string, User> _users = new Dictionary<string, User>();
-        private string _token;
 
-        public RetrieveUserResponseModel RetrieveUser(string userName, string token)
+        private IUserDataManager _userDataManager;
+
+        
+
+        public UserRepository(IUserDataManager userDataManager)
         {
-            _token = token;
-            bool isSuccess = TryGetUserFromCache(userName, out RetrieveUserResponseModel user);
+            _userDataManager = userDataManager;
+        }
 
-            return user;
+        public RetrieveUserResponseModel RetrieveUser(List<string> userName, string token)
+        {
+            RetrieveUserResponseModel retrieveUserResponseModel = new RetrieveUserResponseModel() { Users = new List<User>() }; 
+            //Try to get the user from the cache or from github
+            if (GetUsers(userName, token, out List<User> retrievedUsers)) 
+            {
+                retrieveUserResponseModel.Users = retrievedUsers;
+                retrieveUserResponseModel.Status = (StatusCodes.Status200OK);
+            }
+            else
+            {
+                retrieveUserResponseModel.Status = (StatusCodes.Status500InternalServerError);
+                retrieveUserResponseModel.Message = "Please contact admin support";
+            }
+            
+            return retrieveUserResponseModel;
         }
 
         /// <summary>
         /// Gets the user from the cache or from github
         /// </summary>
-        /// <param name="userName"></param>
+        /// <param name="userNamesList"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        private bool TryGetUserFromCache(string userName, out RetrieveUserResponseModel userResponseModel)
+        private bool GetUsers(List<string> userNamesList, string token, out List<User> _retrievedUsers)
         {
-            if (_users.TryGetValue(userName, out User retrieveUser))
+            _retrievedUsers = new List<User>();
+            foreach (string name in userNamesList)
             {
-                userResponseModel = new RetrieveUserResponseModel() { 
-                    Users = new List<User>() { retrieveUser },
-                    Status = 200,
-                    Message = "Successfully retrieved user from cache"
-                };
-                return true;
-            } else if (GetUserFromGithub(userName, out userResponseModel))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Retrieves the user from github, calls the github api
-        /// </summary>
-        /// <param name="userName"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        private bool GetUserFromGithub(string userName, out RetrieveUserResponseModel userResponseModel)
-        {
-            //Send a GET request to the github api with the username and access token
-            HttpClient client = new HttpClient();
-
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-            _githubApiUrl += userName;
-            client.Timeout = TimeSpan.FromSeconds(3); //time out after 3 seconds
-
-            HttpResponseMessage result = client.GetAsync(_githubApiUrl).Result;
-            userResponseModel = new RetrieveUserResponseModel() { Users = new List<User>() };
-            userResponseModel.Status = (int)result.StatusCode;
-            userResponseModel.Message = result.ReasonPhrase;
-            if (result.IsSuccessStatusCode)
-            {
-                //Parse the response
-                string json = result.Content.ReadAsStringAsync().Result;
-                User newUser = JsonConvert.DeserializeObject<User>(json);
-                _users.Add(userName, newUser);
-                userResponseModel.Users.Add(newUser);
-                return true;
+                if (_users.TryGetValue(name, out User retrievedUserFromCache))
+                {
+                    retrievedUserFromCache.originInfo = "User retrieved from cache";
+                    _retrievedUsers.Add(retrievedUserFromCache);
+                    return true;
+                }else if (_userDataManager.TryGetUser(name, token, out User retrievedUserFromManager))
+                {
+                    //Add the user to the cache
+                    _users.Add(name, retrievedUserFromManager);
+                    //Add the user to the list of retrieved users
+                    _retrievedUsers.Add(retrievedUserFromManager);
+                    return true;
+                }
             }
             return false;
         }
+
+
     }
 }
