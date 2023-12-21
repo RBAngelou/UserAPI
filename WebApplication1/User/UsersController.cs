@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication1.User
 {
@@ -7,23 +8,22 @@ namespace WebApplication1.User
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IUserRepository _userRepository;
 
-        public UsersController(IUserService userService, IUserRepository userRepository)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
-            _userRepository = userRepository;
         }
 
         /// <summary>
-        /// The GetUser endpoint.
+        /// The RetrieveUser endpoint.
         /// </summary>
         /// <param name="userNames"></param>
         /// <returns></returns>
-        [HttpGet(Name = "GetUsers")]
-        public ActionResult<GetUserResponseModel> GetUsers([FromQuery] GetUserRequestModel userNames)
+        [HttpPost(Name = "RetrieveUsers")]
+        [Authorize]
+        public ActionResult<RetrieveUserResponseModel> RetrieveUsers([FromBody] RetrieveUserRequestModel userNames)
         {
-            return _userService.GetUsers(userNames);
+            return _userService.RetrieveUsers(userNames);
         }
     }
 }

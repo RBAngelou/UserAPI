@@ -5,12 +5,12 @@ namespace WebApplication1.User
     /// <summary>
     /// The request model for the GetUser endpoint.
     /// </summary>
-    public class GetUserRequestModel
+    public class RetrieveUserRequestModel
     {
         /// <summary>
         /// The List of Usernames to use as filter for retrieving users.
         /// </summary>
         [Required]
-        public required List<string> Usernames { get; set; }
+        public List<string> Usernames { get; set; }
     }
 }

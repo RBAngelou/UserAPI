@@ -5,7 +5,7 @@ namespace WebApplication1.User
     /// <summary>
     /// The response model for the GetUser endpoint.
     /// </summary>
-    public class GetUserResponseModel
+    public class RetrieveUserResponseModel
     {
         /// <summary>
         /// The List of Users retrieved.
