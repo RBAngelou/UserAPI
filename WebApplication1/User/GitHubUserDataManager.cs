@@ -21,16 +21,15 @@ namespace WebApplication1.User
         {
             //Send a GET request to the github api with the username and access token
             HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
             _githubApiUrl += userName;
             client.Timeout = TimeSpan.FromSeconds(3); //time out after 3 seconds
             client.BaseAddress = new System.Uri(_githubApiUrl);
 
             client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact;
+            HttpResponseMessage result = client.GetAsync(new System.Uri(_githubApiUrl)).Result;
 
-            HttpResponseMessage result = client.SendAsync(new HttpRequestMessage(HttpMethod.Head, _githubApiUrl)).Result;
-            //HttpResponseMessage result = client.GetAsync(_githubApiUrl).Result;
             if (result.IsSuccessStatusCode)
             {
                 //Parse the response
