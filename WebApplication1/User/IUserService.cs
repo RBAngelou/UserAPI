@@ -2,6 +2,6 @@
 {
     public interface IUserService
     {
-        public RetrieveUserResponseModel RetrieveUsers(RetrieveUserRequestModel userNames);
+        public Task<RetrieveUserResponseModel> RetrieveUsers(RetrieveUserRequestModel userNames);
     }
 }

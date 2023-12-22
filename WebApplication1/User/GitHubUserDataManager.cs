@@ -17,8 +17,9 @@ namespace WebApplication1.User
         /// <param name="userName"></param>
         /// <param name="user"></param>
         /// <returns></returns>
-        public bool TryGetUser(string userName, string token, out User newUser)
+        public async Task<User> TryGetUser(string userName, string token)
         {
+             User newUser = null;
             //Send a GET request to the github api with the username and access token
             HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -28,7 +29,7 @@ namespace WebApplication1.User
             client.BaseAddress = new System.Uri(_githubApiUrl);
 
             client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact;
-            HttpResponseMessage result = client.GetAsync(new System.Uri(_githubApiUrl)).Result;
+            HttpResponseMessage result = await client.GetAsync(new System.Uri(_githubApiUrl)).ConfigureAwait(false);
 
             if (result.IsSuccessStatusCode)
             {
@@ -36,10 +37,8 @@ namespace WebApplication1.User
                 string json = result.Content.ReadAsStringAsync().Result;
                 newUser = JsonConvert.DeserializeObject<User>(json);
                 newUser.originInfo = "User retrieved from github";
-                return true;
             }
-            newUser = null;
-            return false;
+            return newUser;
         }
     }
 }

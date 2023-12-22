@@ -20,9 +20,9 @@ namespace WebApplication1.User
         /// <returns></returns>
         [HttpGet]
         [Route("/api/retrieveUsers")]
-        public ActionResult<RetrieveUserResponseModel> retrieveUsers([FromQuery] RetrieveUserRequestModel userRequest)
+        public async Task<ActionResult<RetrieveUserResponseModel>> retrieveUsersAsync([FromQuery] RetrieveUserRequestModel userRequest)
         {
-            return _userService.RetrieveUsers(userRequest);
+            return await _userService.RetrieveUsers(userRequest).ConfigureAwait(false);
         }
     }
 }

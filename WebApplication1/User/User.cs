@@ -31,10 +31,10 @@ namespace WebApplication1.User
         public int numOfPubRepo { get; set; }
 
         /// <summary>
-        /// Computes the average number of followers per public repository.
+        /// Computes the average number of followers per public repository. If numOfPubRepo is 0, then the average is 0.
         /// </summary>
         /// <returns>average number of followers</returns>
-        public double avgNumFollowersPerPubRepo { get { return numOfFollowers / numOfPubRepo; } }
+        public double avgNumFollowersPerPubRepo { get { return (numOfPubRepo > 0) ? numOfFollowers / numOfPubRepo : 0; } set { } }
 
         /// <summary>
         /// Origin info of the user.

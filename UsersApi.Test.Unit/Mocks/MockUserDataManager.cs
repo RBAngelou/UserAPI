@@ -9,15 +9,23 @@ namespace UsersApi.Test.Unit.Mocks
 {
     public class MockUserDataManager : IUserDataManager
     {
-        public bool TryGetUser(string userName, string token, out User user)
+        public async Task<User> TryGetUser(string userName, string token)
         {
-            user = new User() { 
-                name = userName,
-                login = $"test-{userName}",
-                numOfFollowers = 1,
-                numOfPubRepo = 7,
-                originInfo = "User retrieved from mock" };
-            return true;
+            if (userName != "nonExistentUser")
+            {
+                User user = new User()
+                {
+                    name = userName,
+                    login = $"test-{userName}",
+                    numOfFollowers = 1,
+                    numOfPubRepo = 7,
+                    originInfo = "User retrieved from mock"
+                };
+
+                return user;
+            }
+
+            return null;  
         }
     }
 }

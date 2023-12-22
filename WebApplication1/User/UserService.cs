@@ -9,9 +9,9 @@ namespace WebApplication1.User
             _userRepository = userRepository;
         }
 
-        public RetrieveUserResponseModel RetrieveUsers(RetrieveUserRequestModel userNames)
+        public async Task<RetrieveUserResponseModel> RetrieveUsers(RetrieveUserRequestModel userNames)
         {
-            RetrieveUserResponseModel getUserResponseModel = _userRepository.RetrieveUser(userNames.usernames, userNames.bearerToken);
+            RetrieveUserResponseModel getUserResponseModel = await _userRepository.RetrieveUser(userNames.usernames, userNames.bearerToken).ConfigureAwait(false);
             return getUserResponseModel;
         }
     }
